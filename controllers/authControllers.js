@@ -225,20 +225,22 @@ export const signin = async (req, res, next) => {
 
 export const logout = (req, res, next) => {
     try {
-        res.cookie('token', null, {
-            maxAge: 0,
+        res.clearCookie("token", {
+            httpOnly: true,
             secure: true,
-            httpOnly: true
+            sameSite: "none",
+            path: "/"
         });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
-            message: 'logout successfully'
-        })
+            message: "logout successfully"
+        });
+
     } catch (err) {
-        next(new AppError(err || 'Failed to logout, please try again', 400));
+        return next(new AppError(err || 'Failed to logout, please try again', 400));
     }
-}
+};
 
 export const forgetPassword = async (req, res, next) => {
     const { email } = req.body;
