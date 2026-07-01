@@ -1,4 +1,3 @@
-// src/loaders/documentLoader.js
 import fs from "fs/promises";
 import path from "path";
 import { TextLoader } from "@langchain/classic/document_loaders/fs/text";
