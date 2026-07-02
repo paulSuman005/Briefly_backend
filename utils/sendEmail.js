@@ -1,17 +1,31 @@
 import nodemailer from "nodemailer";
 
+console.log({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    username: process.env.SMTP_USERNAME
+});
+
 
 const transporter = nodemailer.createTransport({
+
     host: process.env.SMTP_HOST,
+
     port: Number(process.env.SMTP_PORT),
+
     secure: false,
-    auth: {
+
+    auth:{
         user: process.env.SMTP_USERNAME,
         pass: process.env.SMTP_PASSWORD
     },
 
-    connectionTimeout: 10000,
-    socketTimeout: 10000
+    tls:{
+        rejectUnauthorized:false
+    },
+
+    connectionTimeout:10000,
+    socketTimeout:10000
 });
 
 
