@@ -89,20 +89,6 @@ export const signup = async (req, res, next) => {
 }
 
 export const verifyEmail = async (req, res, next) => {
-    for (let i = 0; i < 100000000; i++);
-    return res.status(200).json({
-        success: true,
-        message: "verified",
-        data: {
-            _id: "6a43ba7bf5eee955d069ec85",
-            name: "Suman Paul",
-            email: "edusmartdev@gmail.com",
-            isVerified: true,
-            createdAt: "2026-06-30T12:45:47.868Z",
-            updatedAt: "2026-06-30T12:51:22.269Z",
-            __v: 0
-        }
-    });
     try {
         const { email, otp } = req.body;
         console.log(req.body);
