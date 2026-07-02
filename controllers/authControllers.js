@@ -182,7 +182,7 @@ export const signin = async (req, res, next) => {
     try {
         if (!email || !password) return next(new AppError('every field is required!', 400));
 
-        const user = await User.findOne({ email }).select('+password');
+        const user = await User.findOne({ email, isVerified: true }).select('+password');
 
         if (!user) return next(new AppError('user not found!', 400));
 
