@@ -1,50 +1,51 @@
-import nodemailer from "nodemailer";
+import SibApiV3Sdk from "@getbrevo/brevo";
 
-const transporter = nodemailer.createTransport({
-    host: "smtp-relay.brevo.com",
-    port: 465,
-    secure: true,
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
-    auth: {
-        user: process.env.SMTP_USERNAME,
-        pass: process.env.SMTP_PASSWORD,
-    },
-
-    connectionTimeout: 30000,
-    greetingTimeout: 30000,
-    socketTimeout: 30000,
-});
+// Set the API key
+apiInstance.setApiKey(
+    SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,
+    process.env.SMTP_PASSWORD
+);
 
 const sendEmail = async (email, subject, message) => {
     try {
-        console.log("========== SMTP CONFIG ==========");
-        console.log("Host:", process.env.SMTP_HOST);
-        console.log("Port:", process.env.SMTP_PORT);
-        console.log("User:", process.env.SMTP_USERNAME);
+        console.log("========== BREVO EMAIL ==========");
         console.log("Sender:", process.env.SENDER_EMAIL);
+        console.log("Recipient:", email);
+        console.log("Subject:", subject);
         console.log(
-            "SMTP Password:",
+            "API Key:",
             process.env.SMTP_PASSWORD ? "Present ✅" : "Missing ❌"
         );
         console.log("=================================");
 
-        const info = await transporter.sendMail({
-            from: `"Briefly" <${process.env.SENDER_EMAIL}>`,
-            to: email,
+        const response = await apiInstance.sendTransacEmail({
+            sender: {
+                email: process.env.SENDER_EMAIL,
+                name: "Briefly",
+            },
+            to: [
+                {
+                    email,
+                },
+            ],
             subject,
-            html: message,
+            htmlContent: message,
         });
 
         console.log("✅ Email sent successfully");
-        console.log(info.response);
+        console.log("Message ID:", response.body?.messageId || response);
 
-        return info;
+        return response;
     } catch (error) {
-        console.error("❌ Email Error");
+        console.error("❌ Brevo Email Error");
         console.error("Message:", error.message);
-        console.error("Code:", error.code);
-        console.error("Command:", error.command);
-        console.error(error);
+
+        if (error.response) {
+            console.error("Status:", error.response.statusCode);
+            console.error("Body:", error.response.body);
+        }
 
         throw error;
     }
